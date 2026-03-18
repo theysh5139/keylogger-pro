@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cyber Activity Monitor</title>
+
+    <style>
+        body {
+            background: #020617;
+            color: #e2e8f0;
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+        }
+
+        .navbar {
+            background: #020617;
+            border-bottom: 1px solid #1e293b;
+            padding: 15px 25px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            color: #38bdf8;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* STATS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #020617;
+            border: 1px solid #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .card h2 {
+            margin: 5px 0;
+        }
+
+        /* LEGEND */
+        .legend {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .blue { background: #38bdf8; }
+        .green { background: #22c55e; }
+        .orange { background: #f59e0b; }
+        .gray { background: #64748b; }
+
+        .log-container {
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 10px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .log-box {
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+
+        .window { border-left: 4px solid #38bdf8; }
+        .clipboard { border-left: 4px solid #22c55e; }
+        .action { border-left: 4px solid #f59e0b; }
+        .key { border-left: 4px solid #64748b; }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h1>🛡️ Cyber Activity Monitor</h1>
+</div>
+
+<div class="container">
+   <div style="text-align: right; margin-bottom: 15px;">
+    <button onclick="resetLogs()" style="
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+    ">
+        🗑️ Reset Logs
+    </button>
+</div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="card"><h2 id="windowCount">0</h2><p>Windows</p></div>
+        <div class="card"><h2 id="clipboardCount">0</h2><p>Clipboard</p></div>
+        <div class="card"><h2 id="actionCount">0</h2><p>Actions</p></div>
+        <div class="card"><h2 id="keyCount">0</h2><p>Keystrokes</p></div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+        <div class="legend-item"><div class="dot blue"></div> Window</div>
+        <div class="legend-item"><div class="dot green"></div> Clipboard</div>
+        <div class="legend-item"><div class="dot orange"></div> Actions</div>
+        <div class="legend-item"><div class="dot gray"></div> Keys</div>
+    </div>
+
+    <!-- LOGS -->
+    <div class="log-container" id="logContainer"></div>
+
+</div>
+
+<script>
+async function fetchLogs() {
+    const res = await fetch("/logs");
+    const data = await res.json();
+
+    const container = document.getElementById("logContainer");
+    container.innerHTML = "";
+
+    data.logs.forEach(log => {
+        const div = document.createElement("div");
+        div.className = "log-box " + log.type;
+        div.textContent = log.text;
+        container.appendChild(div);
+    });
+
+    document.getElementById("windowCount").textContent = data.stats.window;
+    document.getElementById("clipboardCount").textContent = data.stats.clipboard;
+    document.getElementById("actionCount").textContent = data.stats.action;
+    document.getElementById("keyCount").textContent = data.stats.key;
+}
+
+// Refresh every 2 seconds
+setInterval(fetchLogs, 2000);
+
+// Initial load
+fetchLogs();
+
+async function resetLogs() {
+    if (!confirm("Are you sure you want to delete all logs?")) return;
+
+    await fetch("/reset", { method: "POST" });
+
+    document.getElementById("logContainer").innerHTML = "";
+
+    document.getElementById("windowCount").textContent = 0;
+    document.getElementById("clipboardCount").textContent = 0;
+    document.getElementById("actionCount").textContent = 0;
+    document.getElementById("keyCount").textContent = 0;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+
+[2026-03-18 22:53:51] [CLIPBOARD] python main.py
+
+[2026-03-18 22:53:59] [WINDOW] requirements.txt - keylogger-project - Visual Studio Code
+hi this is a test forkeylogger
+[2026-03-18 22:54:08] [WINDOW] New Tab - Google Chrome
+you
+
+[2026-03-18 22:54:16] [WINDOW] (6) YouTube - Google Chrome
+nice songs
+
+[2026-03-18 22:55:56] [CLIPBOARD] 
+
+[2026-03-18 22:55:57] [WINDOW] logs.txt - keylogger-project - Visual Studio Code
+[BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE]
+Key.escKey.delete

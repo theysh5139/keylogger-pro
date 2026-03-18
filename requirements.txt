@@ -1,0 +1,6 @@
+pynput
+pillow
+pyperclip
+pywin32
+cryptography
+flask
